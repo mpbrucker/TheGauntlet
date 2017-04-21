@@ -39,5 +39,8 @@ function [ end1, end2 ] = findEndpoints( points, sensitivity )
     
     assert(~isnan(end1) && ~isnan(end2)); %Case with zero points, I think
     
+    end1 = (end1 * lineDir) + lineOffset;
+    end2 = (end2 * lineDir) + lineOffset;
+    
 end
 
