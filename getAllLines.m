@@ -9,20 +9,20 @@ function lines = getAllLines(r, theta, thresh)
     hold on;
     while (size(points,1) > thresh) % While there are still points left
         [line, inliers, outliers] = getBestRANSAC(points, 100, .0002); % Tweak this
-        [end1, end2, remaining] = findEndpoints(inliers, .5);
+        [end1, end2, insidePoints] = findEndpoints(inliers, 1);
         
         
         lines(:, :, i) = [end1; end2];
+        plot(lines(:,1, end), lines(:,2,end), 'r');
         i = i + 1;
-%         points = getOutliers(points, remaining);
+%         plot(insidePoints(:,1), insidePoints(:,2), 'g*');
+        points = getOutliers(points, insidePoints);
 %         plot(points(:,1), points(:,2), 'g*');
-%         plot([end1; end2](:,1), [end1; end2](:,2), 'r');
-        points = outliers;
+%         points = outliers;
     end
-    lines
-    for i=1:size(lines,3)
-        plot(lines(:,1, i), lines(:,2,i), 'r');
-        hold on;
-    end
+%     for i=1:size(lines,3)
+%         plot(lines(:,1, i), lines(:,2,i), 'r');
+%         hold on;
+%     end
 
 end
