@@ -6,7 +6,7 @@ function [line, inliers, outliers] = getBestRANSAC(points, n, d)
     for i=1:n
         randRows = randperm(size(points,1)); % Sort the rows randomly
         pointRows = randRows(1:2); % Get two random rows
-        testPoints = points(pointRows, :) % Pick the two random points
+        testPoints = points(pointRows, :); % Pick the two random points
         
         [insidePoints, outsidePoints] = getClosePoints(points, testPoints, d); % Get current inlier points
         
@@ -36,7 +36,7 @@ function [line, inliers, outliers] = getBestRANSAC(points, n, d)
 end
 
 function [validPoints, invalidPoints] = getClosePoints(points, line, d)
-    testLine = line(2,:) - line(1,:) % Get vector between the points
+    testLine = line(2,:) - line(1,:); % Get vector between the points
     standPoints = points - line(1,:); % Standardize points to pass through origin
     perpVec = [-testLine(2) testLine(1)]; % Get perpendicular vector
     standPerp = perpVec/norm(perpVec); % Standardize the perpendicular vector
@@ -44,7 +44,6 @@ function [validPoints, invalidPoints] = getClosePoints(points, line, d)
     validIdx = abs(projPoints) < d; % Find valid points
     validPoints = points(find(validIdx), :);
     
-    invalidIdx = ismember(points, validPoints);
-    invalidPoints = reshape(points(invalidIdx==0), [], 2);
+    invalidPoints = getOutliers(points, validPoints);
 end
 

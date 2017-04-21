@@ -1,4 +1,4 @@
-function [ end1, end2, remaining ] = findEndpoints( points, sensitivity )
+function [ end1, end2, remaining] = findEndpoints( points, sensitivity )
     
     [lineDir, lineOffset] = bestFit(points);
     
