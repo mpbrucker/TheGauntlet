@@ -1,9 +1,9 @@
-function [ end1, end2 ] = findEndpoints( points, sensitivity )
+function [ end1, end2, remaining ] = findEndpoints( points, sensitivity )
     
     [lineDir, lineOffset] = bestFit(points);
     
     adj = points - lineOffset; %Center points and line
-    proj = sort(adj * lineDir')
+    proj = sort(adj * lineDir');
     
     
     count = length(proj);                     %number of points
@@ -26,7 +26,7 @@ function [ end1, end2 ] = findEndpoints( points, sensitivity )
         
         if (abs(i-prev) >  threshhold) || (i == proj(length(proj))) %If the gap was above the threshhold or we're at the last point
             if (prev - start) > maxLen             %If this is the new longest
-                maxlen = (prev - start)        %Note that we should use the *previous* value because if it just failed then we've crossed the gap
+                maxLen = (prev - start);        %Note that we should use the *previous* value because if it just failed then we've crossed the gap
                 end1 = start;
                 end2 = prev;
             end
@@ -38,6 +38,18 @@ function [ end1, end2 ] = findEndpoints( points, sensitivity )
     end
     
     assert(~isnan(end1) && ~isnan(end2)); %Case with zero points, I think
+    
+    remaining = [];
+    
+    for point = points'
+        thisProj = (point' - lineOffset) * lineDir';
+        
+        
+        if (thisProj < end1) || (thisProj > end2)
+            remaining = [remaining; point'];
+        end
+    end
+    
     
     end1 = (end1 * lineDir) + lineOffset;
     end2 = (end2 * lineDir) + lineOffset;
