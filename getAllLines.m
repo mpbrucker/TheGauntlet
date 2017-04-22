@@ -1,8 +1,9 @@
 function lines = getAllLines(r, theta, thresh)
-    theta_clean = deg2rad(theta(r~=0)); % Get clean theta values
-    r_clean = (r(r~=0)); % Get clean r values
-    lines = []
-    points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)]; % Points represented in Cartesian coordinates
+    r_keep = (r~=0) & (r<=5);
+    r_clean = r(r_keep);
+    theta_clean = deg2rad(theta(r_keep));
+    lines = [];
+    points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)] % Points represented in Cartesian coordinates
     i=1;
 
     while (size(points,1) > thresh) % While there are still points left
