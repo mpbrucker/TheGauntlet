@@ -12,9 +12,9 @@ function lines = getAllLines(r, theta, thresh)
     points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)] % Points represented in Cartesian coordinates
     i=1;
     while (size(points,1) > thresh) % While there are still points left
-        clf;
-        plot(points(:,1), points(:,2), 'bo'); % Plot the original points
-        hold on;
+%         clf;
+%         plot(points(:,1), points(:,2), 'bo'); % Plot the original points
+%         hold on;
         [line, inliers, outliers] = getBestRANSAC(points, ransacIterations, ransacThreshhold); % Tweak this
         plot(inliers(:,1), inliers(:,2), 'g*');
 %         if(size(inliers,1)<=8)
@@ -24,7 +24,7 @@ function lines = getAllLines(r, theta, thresh)
         
         
         lines(:, :, i) = [end1; end2];
-        plot(lines(:,1,end), lines(:,2,end), 'r-*', 'LineWidth', 3);
+%         plot(lines(:,1,end), lines(:,2,end), 'r-*', 'LineWidth', 3);
         disp(lines(:,:,end));
         i = i + 1;
 %         plot(insidePoints(:,1), insidePoints(:,2), 'g*');
@@ -32,6 +32,11 @@ function lines = getAllLines(r, theta, thresh)
         points = [outliers; remaining];
 %         plot(points(:,1), points(:,2), 'g*');
 %         points = outliers;
+    end
+    size(lines)
+    for j=1:i-1
+        plot(lines(:,1,j), lines(:,2,j), 'r', 'LineWidth', 3)
+        hold on;
     end
 
 end
