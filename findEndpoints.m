@@ -58,7 +58,7 @@ function [ end1, end2, remaining] = findEndpoints( points, sensitivity )
         thisProj = (point' - lineOffset) * lineDir';
         
         
-        if (thisProj < end1) || (thisProj > end2)
+        if (thisProj <= (end1-.001)) || (thisProj >= (end2+.001))
             remaining = [remaining; point'];
         end
     end

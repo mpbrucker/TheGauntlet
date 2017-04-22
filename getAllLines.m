@@ -1,9 +1,9 @@
 function lines = getAllLines(r, theta, thresh)
 
     rMaxThreshhold = 5; %meters
-    ransacIterations = 50;
-    ransacThreshhold = 0.005; %meters
-    endpointsThreshhold = 0.1;
+    ransacIterations = 500;
+    ransacThreshhold = 0.01; %meters
+    endpointsThreshhold = 0.5;
 
     r_keep = (r~=0) & (r<=rMaxThreshhold);
     r_clean = r(r_keep);
@@ -20,7 +20,7 @@ function lines = getAllLines(r, theta, thresh)
 %         if(size(inliers,1)<=8)
 %             break;
 %         end
-        [end1, end2, insidePoints] = findEndpoints(inliers, endpointsThreshhold);
+        [end1, end2, remaining] = findEndpoints(inliers, endpointsThreshhold);
         
         
         lines(:, :, i) = [end1; end2];
