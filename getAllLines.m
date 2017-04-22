@@ -19,14 +19,15 @@ function lines = getAllLines(r, theta, thresh)
 %         if(size(inliers,1)<=8)
 %             break;
 %         end
-        [end1, end2, insidePoints] = findEndpoints(inliers, endpointsThreshhold);
+        [end1, end2, remaining] = findEndpoints(inliers, endpointsThreshhold);
         
         
         lines(:, :, i) = [end1; end2];
         plot(lines(:,1, end), lines(:,2,end), 'r', 'LineWidth', 3);
         i = i + 1;
 %         plot(insidePoints(:,1), insidePoints(:,2), 'g*');
-        points = getOutliers(points, insidePoints); % Remove inlier points
+%        points = getOutliers(points, insidePoints); % Remove inlier points
+        points = [outliers; remaining];
 %         plot(points(:,1), points(:,2), 'g*');
 %         points = outliers;
     end
