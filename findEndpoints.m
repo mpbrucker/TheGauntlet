@@ -13,9 +13,11 @@ function [ end1, end2, remaining] = findEndpoints( points, sensitivity )
     
     
     maxLen = 0;
+    maxPointCount = 0;
     end1 = NaN;
     end2 = NaN;
     start = NaN;
+    pointCount = 0;
     prev = proj(1);
     
     for i = proj'
@@ -25,12 +27,17 @@ function [ end1, end2, remaining] = findEndpoints( points, sensitivity )
         end
         
         if (abs(i-prev) >  threshhold) %If the gap was above the threshhold
-            if abs(prev - start) > maxLen             %If this is the new longest
+            %if abs(prev - start) > maxLen             %If this is the new longest
+            if pointCount > maxPointCount
                 maxLen = (prev - start);        %Note that we should use the *previous* value because if it just failed then we've crossed the gap
+                maxPointCount = pointCount;
                 end1 = start;
                 end2 = prev;
             end
             start = NaN;                        %So it gets reset at the next iteration
+            pointCount = 0;
+        else
+            pointCount = pointCount + 1;
         end %end if gap or last point
             
         prev = i;
@@ -38,8 +45,10 @@ function [ end1, end2, remaining] = findEndpoints( points, sensitivity )
     end
     
                                         % Also run after the last point
-    if abs(prev - start) > maxLen          %If this is the new longest
+    %if abs(prev - start) > maxLen          %If this is the new longest
+    if pointCount > maxPointCount
     	maxLen = (prev - start);        %Note that we should use the *previous* value because if it just failed then we've crossed the gap
+        maxPointCount = pointCount;
         end1 = start;
         end2 = prev;
     end
