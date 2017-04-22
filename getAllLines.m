@@ -1,13 +1,11 @@
 function lines = getAllLines(r, theta, thresh)
 
-    %THESE DO NOT AFFECT ANYTHING!  They will be subbed in after Matt
-    %commits to Git
     rMaxThreshhold = 5; %meters
     ransacIterations = 50;
     ransacThreshhold = 0.005; %meters
     endpointsThreshhold = 0.1;
 
-    r_keep = (r~=0) & (r<=5);
+    r_keep = (r~=0) & (r<=rMaxThreshhold);
     r_clean = r(r_keep);
     theta_clean = deg2rad(theta(r_keep));
     lines = [];
@@ -17,12 +15,12 @@ function lines = getAllLines(r, theta, thresh)
         clf;
         plot(points(:,1), points(:,2), 'bo'); % Plot the original points
         hold on;
-        [line, inliers, outliers] = getBestRANSAC(points, 500, .03); % Tweak this
+        [line, inliers, outliers] = getBestRANSAC(points, ransacIterations, ransacThreshhold); % Tweak this
         plot(inliers(:,1), inliers(:,2), 'g*');
 %         if(size(inliers,1)<=8)
 %             break;
 %         end
-        [end1, end2, insidePoints] = findEndpoints(inliers, .5);
+        [end1, end2, insidePoints] = findEndpoints(inliers, endpointsThreshhold);
         
         
         lines(:, :, i) = [end1; end2];
@@ -30,7 +28,8 @@ function lines = getAllLines(r, theta, thresh)
         disp(lines(:,:,end));
         i = i + 1;
 %         plot(insidePoints(:,1), insidePoints(:,2), 'g*');
-        points = getOutliers(points, insidePoints); % Remove inlier points
+%        points = getOutliers(points, insidePoints); % Remove inlier points
+        points = [outliers; remaining];
 %         plot(points(:,1), points(:,2), 'g*');
 %         points = outliers;
     end
