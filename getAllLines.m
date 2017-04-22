@@ -1,4 +1,12 @@
 function lines = getAllLines(r, theta, thresh)
+
+    %THESE DO NOT AFFECT ANYTHING!  They will be subbed in after Matt
+    %commits to Git
+    rMaxThreshhold = 5; %meters
+    ransacIterations = 50;
+    ransacThreshhold = 0.005; %meters
+    endpointsThreshhold = 0.1;
+
     r_keep = (r~=0) & (r<=5);
     r_clean = r(r_keep);
     theta_clean = deg2rad(theta(r_keep));
