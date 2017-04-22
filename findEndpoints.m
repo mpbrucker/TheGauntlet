@@ -47,8 +47,8 @@ function [ end1, end2, insidePoints] = findEndpoints( points, sensitivity )
     %assert(~isnan(end1) && ~isnan(end2)); %Case with zero points, I think
     
     if (isnan(end1) || isnan(end2))
-        disp("Endpoint is NaN!");
-        points
+        disp('Endpoint is NaN!');
+%         points
     end
     
     
