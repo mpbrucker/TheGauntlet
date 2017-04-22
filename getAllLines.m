@@ -8,11 +8,11 @@ function lines = getAllLines(r, theta, thresh)
     plot(points(:,1), points(:,2), 'bo'); % Plot the original points
     hold on;
     while (size(points,1) > thresh) % While there are still points left
-        [line, inliers, outliers] = getBestRANSAC(points, 500, .005); % Tweak this
+        [line, inliers, outliers] = getBestRANSAC(points, 50, .005); % Tweak this
 %         if(size(inliers,1)<=8)
 %             break;
 %         end
-        [end1, end2, insidePoints] = findEndpoints(inliers, 1);
+        [end1, end2, insidePoints] = findEndpoints(inliers, .1);
         
         
         lines(:, :, i) = [end1; end2];
