@@ -19,6 +19,7 @@ function [line, inliers, outliers] = getBestRANSAC(points, n, d)
         end 
     end
     line = bestLine;
+    disp('Found RANSAC.')
 %     clf;
 %     plot(points(:,1), points(:,2), 'r*');
 %     hold on;
