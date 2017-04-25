@@ -6,6 +6,7 @@ function lines = getAllLines(r, theta, thresh)
     ransacIterations = 500;
     ransacThreshhold = 0.01; %meters
     endpointsThreshhold = 0.5;
+    bucketThreshhold = 0.01; %...meters?
 
     r_keep = (r~=0) & (r<=rMaxThreshhold);
     r_clean = r(r_keep);
@@ -40,7 +41,7 @@ function lines = getAllLines(r, theta, thresh)
         plot(lines{j}(:,1), lines{j}(:,2), 'r', 'LineWidth', 3)
         lineData = linePoints{j}
         [xc, yc, r] = fitCircleLinear(lineData(:,1), lineData(:,2));
-        if (abs(r-rBucket) < .015)
+        if (abs(r-rBucket) < bucketThreshhold)
             viscircles([xc yc], r);
         end
         hold on;

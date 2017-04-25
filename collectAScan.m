@@ -1,4 +1,4 @@
-rosinit()
+%rosinit()
 sub = rossubscriber('/stable_scan');
 
 % Collect data at the room origin

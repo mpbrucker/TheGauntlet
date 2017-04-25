@@ -43,8 +43,18 @@ function [validPoints, invalidPoints] = getClosePoints(points, line, d)
     standPerp = perpVec/norm(perpVec); % Standardize the perpendicular vector
     projPoints = standPerp*standPoints'; % Project points onto the perpendicular vector
     validIdx = abs(projPoints) < d; % Find valid points
-    validPoints = points(find(validIdx), :);
+    validPoints = [];
+    invalidPoints = [];
     
-    invalidPoints = getOutliers(points, validPoints);
+    for i = 1:length(points)
+       if validIdx(i)
+           validPoints = [validPoints; points(i,:)];
+       else
+           invalidPoints = [invalidPoints; points(i,:)];
+       end
+    end
+    
+    %validPoints = points(find(validIdx), :);
+    %invalidPoints = getOutliers(points, validPoints);
 end
 
