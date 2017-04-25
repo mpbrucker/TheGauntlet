@@ -1,4 +1,6 @@
 function lines = getAllLines(r, theta, thresh)
+    rBucket = .146; % Radius of the bucket (m)
+
 
     rMaxThreshhold = 5; %meters
     ransacIterations = 500;
@@ -8,24 +10,24 @@ function lines = getAllLines(r, theta, thresh)
     r_keep = (r~=0) & (r<=rMaxThreshhold);
     r_clean = r(r_keep);
     theta_clean = deg2rad(theta(r_keep));
-    lines = [];
+    lines = {};
+    linePoints = {};
     points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)] % Points represented in Cartesian coordinates
     i=1;
+    clf;
+    plot(points(:,1), points(:,2), 'bo'); % Plot the original points
+    hold on;
+
     while (size(points,1) > thresh) % While there are still points left
-%         clf;
-%         plot(points(:,1), points(:,2), 'bo'); % Plot the original points
-%         hold on;
         [line, inliers, outliers] = getBestRANSAC(points, ransacIterations, ransacThreshhold); % Tweak this
         plot(inliers(:,1), inliers(:,2), 'g*');
 %         if(size(inliers,1)<=8)
 %             break;
 %         end
-        [end1, end2, remaining] = findEndpoints(inliers, endpointsThreshhold);
-        
-        
-        lines(:, :, i) = [end1; end2];
+        [end1, end2, remaining, inPoints] = findEndpoints(inliers, endpointsThreshhold);
+        linePoints{i} = inPoints;
+        lines{i} = [end1; end2];
 %         plot(lines(:,1,end), lines(:,2,end), 'r-*', 'LineWidth', 3);
-        disp(lines(:,:,end));
         i = i + 1;
 %         plot(insidePoints(:,1), insidePoints(:,2), 'g*');
 %        points = getOutliers(points, insidePoints); % Remove inlier points
@@ -35,8 +37,15 @@ function lines = getAllLines(r, theta, thresh)
     end
     size(lines)
     for j=1:i-1
-        plot(lines(:,1,j), lines(:,2,j), 'r', 'LineWidth', 3)
+        plot(lines{j}(:,1), lines{j}(:,2), 'r', 'LineWidth', 3)
+        lineData = linePoints{j}
+        [xc, yc, r] = fitCircleLinear(lineData(:,1), lineData(:,2));
+        if (abs(r-rBucket) < .015)
+            viscircles([xc yc], r);
+        end
         hold on;
     end
+    
+    
 
 end

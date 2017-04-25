@@ -1,4 +1,4 @@
-function [ end1, end2, remaining] = findEndpoints( points, sensitivity )
+function [ end1, end2, remaining, inliers] = findEndpoints( points, sensitivity )
 
     [lineDir, lineOffset] = bestFit(points);
     
@@ -62,6 +62,7 @@ function [ end1, end2, remaining] = findEndpoints( points, sensitivity )
     
     
     remaining = [];
+    inliers = [];
     
     for point = points'
         thisProj = (point' - lineOffset) * lineDir';
@@ -69,6 +70,8 @@ function [ end1, end2, remaining] = findEndpoints( points, sensitivity )
         
         if (thisProj <= (end1-.001)) || (thisProj >= (end2+.001))
             remaining = [remaining; point'];
+        else
+            inliers = [inliers; point'];
         end
     end
     
