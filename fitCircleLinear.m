@@ -1,4 +1,4 @@
-function [xc, yc, r] = fitCircleLinear(x, y)
+function [xc, yc, r, variance] = fitCircleLinear(x, y)
 % This script runs through the task of samplinig points from an arc of
 % a circle with a little bit of noise added.  Next, the best fitting circle
 % is extracted using least squares optimization
@@ -16,4 +16,8 @@ w = A\b;
 xc = -w(1)/2;
 yc = -w(2)/2;
 r = sqrt(xc.^2 + yc.^2 - w(3));
+
+radii = sqrt(x.^2 + y.^2);
+variance = mean((radii - r).^2);
+
 end

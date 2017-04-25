@@ -6,7 +6,8 @@ function lines = getAllLines(r, theta, thresh)
     ransacIterations = 500;
     ransacThreshhold = 0.01; %meters
     endpointsThreshhold = 0.5;
-    bucketThreshhold = 0.01; %...meters?
+    radiusThreshhold = 0.01; %...meters?
+    varianceThreshhold = 1; %Square meters I think
 
     r_keep = (r~=0) & (r<=rMaxThreshhold);
     r_clean = r(r_keep);
@@ -40,8 +41,8 @@ function lines = getAllLines(r, theta, thresh)
     for j=1:i-1
         plot(lines{j}(:,1), lines{j}(:,2), 'r', 'LineWidth', 3)
         lineData = linePoints{j}
-        [xc, yc, r] = fitCircleLinear(lineData(:,1), lineData(:,2));
-        if (abs(r-rBucket) < bucketThreshhold)
+        [xc, yc, r, variance] = fitCircleLinear(lineData(:,1), lineData(:,2));
+        if (abs(r-rBucket) < radiusThreshhold && variance < varianceThreshhold)
             viscircles([xc yc], r);
         end
         hold on;
