@@ -1,4 +1,4 @@
-function [lines, circX, circY, circR] = getAllLines(r, theta, thresh)
+function [lines, circX, circY, circR] = getAllLines(points, thresh)
     rBucket = .146; % Radius of the bucket (m)
 
 
@@ -9,12 +9,12 @@ function [lines, circX, circY, circR] = getAllLines(r, theta, thresh)
     radiusThreshhold = 0.01; %...meters?
     varianceThreshhold = .05; %Square meters I think
 
-    r_keep = (r~=0) & (r<=rMaxThreshhold);
-    r_clean = r(r_keep);
-    theta_clean = deg2rad(theta(r_keep));
+    %r_keep = (r~=0) & (r<=rMaxThreshhold);
+    %r_clean = r(r_keep);
+    %theta_clean = deg2rad(theta(r_keep));
     lines = {};
     linePoints = {};
-    points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)] % Points represented in Cartesian coordinates
+    %points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)] % Points represented in Cartesian coordinates
     i=1;
     clf;
 %     plot(points(:,1), points(:,2), 'bo'); % Plot the original points

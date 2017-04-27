@@ -11,9 +11,11 @@ while true
     pointCloud = receive(subPointCloud);
     points = readXYZ(pointCloud);
     
-    %scatter(points(:,1), points(:,2), '.');
+    scatter(points(:,1), points(:,2), '.');
     
-    [left, right] = dummyNavFunction(points);
+    gradient = getGradient(points);
+    
+    [left, right] = gradientToWheels(gradient);
     msg.Data = [left, right];
     send(pub, msg);
     
