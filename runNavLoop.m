@@ -11,7 +11,7 @@ while true
     pointCloud = receive(subPointCloud);
     points = readXYZ(pointCloud);
     
-    %scatter(points(:,1), points(:,2), '.');
+    scatter(points(:,1), points(:,2), '.');
     
     [left, right] = dummyNavFunction(points);
     msg.Data = [left, right];
