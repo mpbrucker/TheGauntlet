@@ -1,7 +1,7 @@
-function gradOut = getGradient(r, theta, xPos, yPos);
+function gradOut = getGradient(points, xPos, yPos);
     clf;
     RANSACThresh = 30; % The number of "noise points" in our RANSAC search
-    [lines, cx, cy, r] = getAllLines(r, theta, RANSACThresh);
+    [lines, cx, cy, r] = getAllLines(points, RANSACThresh);
     
     [px,py]= meshgrid(xPos-0.01:0.01:xPos+0.01, yPos-0.01:0.01:yPos+0.01);
     [xlim,ylim] = size(px);
@@ -32,7 +32,8 @@ function gradOut = getGradient(r, theta, xPos, yPos);
     [Ex,Ey] = gradient(V);
 
     hold on
-    quiver(px(2,2),py(2,2),-Ex(2,2),-Ey(2,2), 'AutoScale', 'off')
-    plot(xPos, yPos, 'r*');
+    quiver(px(2,2),py(2,2),-Ex(2,2),-Ey(2,2), 'AutoScale', 'off')'
+    gradOut = [-Ex(2,2) -Ey(2,2)]; % Gradient of the robot
+%     plot(xPos, yPos, 'r*');
 
 end
