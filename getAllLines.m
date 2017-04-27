@@ -50,7 +50,7 @@ function [lines, circX, circY, circR] = getAllLines(r, theta, thresh)
     size(lines)
     for j=1:i-1
         plot(lines{j}(:,1), lines{j}(:,2), 'r', 'LineWidth', 3)
-        lineData = linePoints{j}
+        lineData = linePoints{j};
 %         [xc, yc, r, variance] = fitCircleLinear(lineData(:,1), lineData(:,2));
 %         if (abs(r-rBucket) < radiusThreshhold && variance < varianceThreshhold)
 %             viscircles([xc yc], r);
