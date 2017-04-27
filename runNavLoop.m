@@ -10,7 +10,7 @@ while true
     
     rMaxThreshhold = 5;
 
-    scan_message = recieve(subPoints);
+    scan_message = receive(subPoints);
     r = scan_message.Ranges(1:end-1);
     theta = [0:359]';
     
