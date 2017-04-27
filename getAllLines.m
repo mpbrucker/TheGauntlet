@@ -17,7 +17,7 @@ function [lines, circX, circY, circR] = getAllLines(points, thresh)
     %points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)] % Points represented in Cartesian coordinates
     i=1;
     clf;
-%     plot(points(:,1), points(:,2), 'bo'); % Plot the original points
+    plot(points(:,1), points(:,2), 'bo'); % Plot the original points
     hold on;
     circleData = [];
     
