@@ -46,6 +46,4 @@ clf;
         hold on;
     end
     
-
-
 end

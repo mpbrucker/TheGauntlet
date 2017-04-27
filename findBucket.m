@@ -36,12 +36,12 @@ function [ x, y, inliers, outliers ] = findBucket( points )
                bestX = thisX;
                bestY = thisY;
                bestVariance = thisVariance;
-               bestPointSet = [end1 : prev];
+               bestPointSet = [end1, prev];
            end
            end1 = index;
            prev = index;
         else
-            norm(points(index,:) - points(prev,:))
+            norm(points(index,:) - points(prev,:));
             prev = index;
         end
         
