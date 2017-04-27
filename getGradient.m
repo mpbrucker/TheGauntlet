@@ -9,9 +9,6 @@ function gradOut = getGradient(points, xPos, yPos);
 
     for i=1:xlim
         for j=1:ylim
-    %this is the equation and integral with ranges for a specific object:  you
-    %should be able to figure out what this is and edit appropriately to get
-    %what you want
             curV= 0; % Keep track of the current potential
             for k=1:length(lines)
                 curLine = lines{k};
@@ -20,7 +17,7 @@ function gradOut = getGradient(points, xPos, yPos);
                 x0 = curLine(1,1); % Beginning x pos
                 y0 = curLine(1,2); % Beginning y pos
                 m = lineVector(2)/lineVector(1); % Slope of the lines
-                dV = @(u) sqrt(1+m.^2)./sqrt((px(i,j)-(u+x0)).^2+(py(i,j)-(m*u+y0)).^2);
+                dV = @(u) sqrt(1+m.^2)./(sqrt((px(i,j)-(u+x0)).^2+(py(i,j)-(m*u+y0)).^2)).^2;
                 curV = curV - integral(dV, 0, lineVector(1)); % Get potential at current point
 %                 keyboard;
             end

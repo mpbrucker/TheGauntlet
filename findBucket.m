@@ -1,11 +1,8 @@
 function [ x, y, inliers, outliers ] = findBucket( points )
-    clf;
-    plot(points(:,1), points(:,2), 'bo');
-    hold on;
 
     distanceThreshhold = 0.1; %m - the distance to start a new point chunk
     targetRadius = 0.146; % m
-   	radiusThreshhold = 0.5; %...meters?
+   	radiusThreshhold = 0.2; %...meters?
     varianceThreshhold = 2; %Square meters I think
     pointThreshhold = 5; %min point count
     
@@ -33,7 +30,6 @@ function [ x, y, inliers, outliers ] = findBucket( points )
         
         if (norm(points(index,:) - points(prev,:)) > distanceThreshhold) || index == length(points)
            [thisX, thisY, thisRadius, thisVariance] = fitCircleLinear(points(end1:prev,1), points(end1:prev,2))
-           plot(points(end1:prev,1), points(end1:prev, 2), 'g*');
            if (abs(thisRadius - targetRadius) < radiusThreshhold) && (thisVariance < bestVariance) && (prev-end1) >= pointThreshhold
                bestX = thisX;
                bestY = thisY;
@@ -57,8 +53,9 @@ function [ x, y, inliers, outliers ] = findBucket( points )
     x = bestX;
     y = bestY;
     
-    inliers = points(bestPointSet,:);
-    outliers = points(~bestPointSet,:);
+    inliers = points(bestPointSet(1):bestPointSet(2),:);
+    outliers = setdiff(points, inliers, 'rows');
+    plot(outliers(:,1), outliers(:,2), 'g*');
 
 end
 

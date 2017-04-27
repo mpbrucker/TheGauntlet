@@ -1,4 +1,5 @@
 function [lines, circX, circY, circR] = getAllLines(points, thresh)
+clf;
     rBucket = .146; % Radius of the bucket (m)
 
 
@@ -8,30 +9,21 @@ function [lines, circX, circY, circR] = getAllLines(points, thresh)
     endpointsThreshhold = 0.5;
     radiusThreshhold = 0.01; %...meters?
     varianceThreshhold = .05; %Square meters I think
+    bucketRad = .146; % Radius of bucket (m)
 
-    %r_keep = (r~=0) & (r<=rMaxThreshhold);
-    %r_clean = r(r_keep);
-    %theta_clean = deg2rad(theta(r_keep));
+    [circX, circY, inliers, bucketOut] = findBucket(points); % Get the bucket first
+    points = bucketOut; % Remove the bucket points
+
+    
     lines = {};
     linePoints = {};
-    %points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)] % Points represented in Cartesian coordinates
     i=1;
     clf;
-    plot(points(:,1), points(:,2), 'bo'); % Plot the original points
+    plot(points(:,1), points(:,2), 'bo');
     hold on;
+    viscircles([circX circY], bucketRad); % Visualize the bucket
     circleData = [];
     
-    for k=1:size(points,1)-5
-        testPoints = points(k:k+5, :);
-        [xc, yc, r, variance] = fitCircleLinear(testPoints(:,1), testPoints(:,2));
-        circleData(k,:) = [xc yc abs(r-rBucket) variance];
-        if (abs(r-rBucket) < radiusThreshhold && variance < varianceThreshhold)
-            viscircles([xc yc], r);
-            circX = xc; % Set the x-position of the circle
-            circY = yc; % Set the y-position of the circle
-            circR = r; % Set the circle radius
-        end
-    end
 
     while (size(points,1) > thresh) % While there are still points left
         [line, inliers, outliers] = getBestRANSAC(points, ransacIterations, ransacThreshhold); % Tweak this
@@ -51,10 +43,6 @@ function [lines, circX, circY, circR] = getAllLines(points, thresh)
     for j=1:i-1
         plot(lines{j}(:,1), lines{j}(:,2), 'r', 'LineWidth', 3)
         lineData = linePoints{j};
-%         [xc, yc, r, variance] = fitCircleLinear(lineData(:,1), lineData(:,2));
-%         if (abs(r-rBucket) < radiusThreshhold && variance < varianceThreshhold)
-%             viscircles([xc yc], r);
-%         end
         hold on;
     end
     
