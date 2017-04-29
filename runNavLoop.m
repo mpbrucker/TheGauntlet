@@ -22,7 +22,8 @@ while true
     
     scatter(points(:,1), points(:,2), '.');
     
-    gradient = getGradient(points, 0, 0);
+    %gradient = getGradient(points, 0, 0);
+    gradient = noRANSAC(points);
     
     %thetaGrad = atan(gradient(2)/gradient(1))
     %t_rot = abs(thetaGrad/omega) % Time to rotate
