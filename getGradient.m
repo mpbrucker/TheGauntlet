@@ -1,7 +1,8 @@
 function gradOut = getGradient(points, xPos, yPos);
     clf;
     RANSACThresh = 30; % The number of "noise points" in our RANSAC search
-    [lines, cx, cy, r] = getAllLines(points, RANSACThresh);
+    [lines, cx, cy] = getAllLines(points, RANSACThresh);
+    length(lines)
     
     [px,py]= meshgrid(xPos-0.01:0.01:xPos+0.01, yPos-0.01:0.01:yPos+0.01);
     [xlim,ylim] = size(px);
@@ -21,15 +22,21 @@ function gradOut = getGradient(points, xPos, yPos);
                 curV = curV - integral(dV, 0, lineVector(1)); % Get potential at current point
 %                 keyboard;
             end
-            V(i,j) = curV - 3./sqrt((px(i,j)-cx).^2+(py(i,j)-cy).^2); % Add to the matrix of potentials and include goal point
+            if (~isnan(cx)) % If the bucket exists
+                V(i,j) = curV - 5./sqrt((px(i,j)-cx).^2+(py(i,j)-cy).^2); % Add to the matrix of potentials and include goal point
+            else
+                V(i,j) = curV; % Add to the matrix of potentials, without goal point       
+            end
         end
     end
     
 %     contour(px,py,V, 10)
     [Ex,Ey] = gradient(V);
+    
+    vec_size = norm([-Ex(2,2) -Ey(2,2)]);
 
     hold on
-    quiver(px(2,2),py(2,2),-Ex(2,2),-Ey(2,2), 'AutoScale', 'off')'
+    quiver(px(2,2),py(2,2),-Ex(2,2)./vec_size,-Ey(2,2)./vec_size);
     gradOut = [-Ex(2,2) -Ey(2,2)]; % Gradient of the robot
 %     plot(xPos, yPos, 'r*');
 

@@ -1,10 +1,12 @@
 function [ x, y, inliers, outliers ] = findBucket( points )
+%     plot(points(:,1), points(:,2), 'bo');
+    hold on;
 
-    distanceThreshhold = 0.1; %m - the distance to start a new point chunk
-    targetRadius = 0.146; % m
-   	radiusThreshhold = 0.1; %...meters?
-    varianceThreshhold = 0.1; %Square meters I think
-    pointThreshhold = 5; %min point count
+    distanceThreshhold = 0.15; %m - the distance to start a new point chunk
+    targetRadius = 0.11; % m
+   	radiusThreshhold = 0.015; %...meters?
+    varianceThreshhold = 2.5; %Square meters I think
+    pointThreshhold = 4; %min point count
     
     end1 = NaN;
     prev = NaN;
@@ -28,7 +30,7 @@ function [ x, y, inliers, outliers ] = findBucket( points )
             prev = index;
         end
         
-        plot(points(end1:prev,1), points(end1:prev, 2), 'g.');
+%         plot(points(end1:prev,1), points(end1:prev, 2), 'g.');
 
         if (norm(points(index,:) - points(prev,:)) > distanceThreshhold) || index == length(points)
            [thisX, thisY, thisRadius, thisVariance] = fitCircleLinear(points(end1:prev,1), points(end1:prev,2));
@@ -48,18 +50,17 @@ function [ x, y, inliers, outliers ] = findBucket( points )
     end %end for
             
     
-    if (isnan(bestVariance))
-        points
-        error('No bucket found!')
+    if (bestVariance == varianceThreshhold) % No bucket has been found
+        display('No bucket found!')
+        inliers = [];
+        outliers = points;
+    else
+        inliers = points(bestPointSet(1):bestPointSet(2),:);
+        outliers = setdiff(points, inliers, 'rows');
+%         plot(outliers(:,1), outliers(:,2), 'g*');     
     end
-    
-    x = bestX;
+    x = bestX; % Assign bestX and bestY to current best X and y values
     y = bestY;
-    
-    inliers = points(bestPointSet(1):bestPointSet(2),:);
-    outliers = setdiff(points, inliers, 'rows');
-    plot(outliers(:,1), outliers(:,2), 'g*');
-
 
 end
 

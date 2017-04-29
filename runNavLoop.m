@@ -5,9 +5,10 @@ subPoints = rossubscriber('/stable_scan'); %Point-cloud subscriber
 sub_bump = rossubscriber('/bump');          %Bump sensor to stop script
 pub = rospublisher('/raw_vel');             %Velocity publisher to move wheels
 msg = rosmessage(pub);                      %The message which will be sent to the wheels
+omega = .4; % Angular velocity
+d = 0.254; % Length of the wheel base
 
 while true
-    
     rMaxThreshhold = 5;
 
     scan_message = receive(subPoints);
@@ -23,12 +24,28 @@ while true
     
     gradient = getGradient(points, 0, 0);
     
-    [left, right] = gradientToWheels(gradient);
-    msg.Data = [left, right];
+    thetaGrad = atan(gradient(2)/gradient(1))
+    t_rot = abs(thetaGrad/omega) % Time to rotate
+    
+    %calculate the wheel velocities
+    Vl = -omega * d/2*sign(thetaGrad)
+    Vr = omega * d/2*sign(thetaGrad)
+%     [Vl, Vr] = gradientToWheels(gradient);
+
+    %sending the wheel velocities to the NEATO
+    msg.Data = [double(Vl), double(Vr)];
     send(pub, msg);
+    pause(t_rot);
+    
+    msg.Data = [.1, .1];
+    send(pub, msg);
+    pause(.25);
+    msg.Data = [0, 0];
+    send(pub,msg);
+    pause(.1);
     
     b = receive(sub_bump);
-    if any(b.Data)
+    if any(b.Data(2:4))
         break;
     end
     

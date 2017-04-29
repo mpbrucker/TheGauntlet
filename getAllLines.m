@@ -1,6 +1,6 @@
 function [lines, circX, circY, circR] = getAllLines(points, thresh)
 clf;
-    rBucket = .146; % Radius of the bucket (m)
+    rBucket = .11; % Radius of the bucket (m)
 
 
     rMaxThreshhold = 5; %meters
@@ -11,18 +11,20 @@ clf;
     varianceThreshhold = .05; %Square meters I think
     bucketRad = .146; % Radius of bucket (m)
 
+    
+    clf;
+    plot(points(:,1), points(:,2), 'bo');
+    hold on;
     [circX, circY, inliers, bucketOut] = findBucket(points); % Get the bucket first
-    points = bucketOut; % Remove the bucket points
+    if (~isnan(circX))
+        points = bucketOut; % Remove the bucket points
+        viscircles([circX circY], bucketRad); % Visualize the bucket
+    end
 
     
     lines = {};
     linePoints = {};
     i=1;
-    clf;
-    plot(points(:,1), points(:,2), 'bo');
-    hold on;
-    viscircles([circX circY], bucketRad); % Visualize the bucket
-    circleData = [];
     
 
     while (size(points,1) > thresh) % While there are still points left
