@@ -1,5 +1,5 @@
 function [ x, y, inliers, outliers ] = findBucket( points )
-%     plot(points(:,1), points(:,2), 'bo');
+     plot(points(:,1), points(:,2), 'bo');
     hold on;
 
     distanceThreshhold = 0.05; %m - the distance to start a new point chunk
@@ -30,7 +30,7 @@ function [ x, y, inliers, outliers ] = findBucket( points )
             prev = index;
         end
         
-%         plot(points(end1:prev,1), points(end1:prev, 2), 'g.');
+         plot(points(end1:prev,1), points(end1:prev, 2), 'g.');
 
         if (norm(points(index,:) - points(prev,:)) > distanceThreshhold) || index == length(points)
            [thisX, thisY, thisRadius, thisVariance] = fitCircleLinear(points(end1:prev,1), points(end1:prev,2));
@@ -57,7 +57,7 @@ function [ x, y, inliers, outliers ] = findBucket( points )
     else
         inliers = points(bestPointSet(1):bestPointSet(2),:);
         outliers = setdiff(points, inliers, 'rows');
-%         plot(outliers(:,1), outliers(:,2), 'g*');     
+         plot(outliers(:,1), outliers(:,2), 'g*');     
     end
     x = bestX; % Assign bestX and bestY to current best X and y values
     y = bestY;

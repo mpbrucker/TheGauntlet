@@ -10,6 +10,7 @@ d = 0.254; % Length of the wheel base
 
 while true
     rMaxThreshhold = 5;
+    clf;
 
     scan_message = receive(subPoints);
     r = scan_message.Ranges(1:end-1);

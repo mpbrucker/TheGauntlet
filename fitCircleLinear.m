@@ -2,8 +2,6 @@ function [xc, yc, r, variance] = fitCircleLinear(x, y)
 % This script runs through the task of samplinig points from an arc of
 % a circle with a little bit of noise added.  Next, the best fitting circle
 % is extracted using least squares optimization
-%
-% Finally, the circle and the poitns are plotted
 
 % set up an overconstrained system of linear equations
 % A*w = b

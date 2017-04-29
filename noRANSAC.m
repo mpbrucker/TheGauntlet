@@ -12,7 +12,7 @@ function [ gradient ] = noRANSAC( points )
     [circX, circY, ~, outliers] = findBucket(points); % Get the bucket first
     if (~isnan(circX))
         points = outliers; % Remove the bucket points
-        viscircles([circX circY], outliers); % Visualize the bucket
+        viscircles([circX circY], 0.11); % Visualize the bucket -- r=0.11m
         
         dist = norm([circX circY]);
         unit = [circX circY]/dist;
