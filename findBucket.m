@@ -2,9 +2,9 @@ function [ x, y, inliers, outliers ] = findBucket( points )
 %     plot(points(:,1), points(:,2), 'bo');
     hold on;
 
-    distanceThreshhold = 0.15; %m - the distance to start a new point chunk
+    distanceThreshhold = 0.05; %m - the distance to start a new point chunk
     targetRadius = 0.11; % m
-   	radiusThreshhold = 0.015; %...meters?
+   	radiusThreshhold = 0.015; % m
     varianceThreshhold = 2.5; %Square meters I think
     pointThreshhold = 4; %min point count
     

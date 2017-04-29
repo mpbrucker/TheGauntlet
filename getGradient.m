@@ -1,4 +1,4 @@
-function gradOut = getGradient(points, xPos, yPos);
+function gradOut = getGradient(points, xPos, yPos)
     clf;
     RANSACThresh = 30; % The number of "noise points" in our RANSAC search
     [lines, cx, cy] = getAllLines(points, RANSACThresh);
@@ -23,7 +23,7 @@ function gradOut = getGradient(points, xPos, yPos);
 %                 keyboard;
             end
             if (~isnan(cx)) % If the bucket exists
-                V(i,j) = curV - 5./sqrt((px(i,j)-cx).^2+(py(i,j)-cy).^2); % Add to the matrix of potentials and include goal point
+                V(i,j) = curV + 5./sqrt((px(i,j)-cx).^2+(py(i,j)-cy).^2); % Add to the matrix of potentials and include goal point
             else
                 V(i,j) = curV; % Add to the matrix of potentials, without goal point       
             end

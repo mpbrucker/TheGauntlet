@@ -24,22 +24,22 @@ while true
     
     gradient = getGradient(points, 0, 0);
     
-    thetaGrad = atan(gradient(2)/gradient(1))
-    t_rot = abs(thetaGrad/omega) % Time to rotate
+    %thetaGrad = atan(gradient(2)/gradient(1))
+    %t_rot = abs(thetaGrad/omega) % Time to rotate
     
     %calculate the wheel velocities
-    Vl = -omega * d/2*sign(thetaGrad)
-    Vr = omega * d/2*sign(thetaGrad)
-%     [Vl, Vr] = gradientToWheels(gradient);
+    %Vl = -omega * d/2*sign(thetaGrad)
+    %Vr = omega * d/2*sign(thetaGrad)
+    [Vl, Vr] = gradientToWheels(gradient);
 
     %sending the wheel velocities to the NEATO
     msg.Data = [double(Vl), double(Vr)];
     send(pub, msg);
-    pause(t_rot);
+    %pause(t_rot);
     
-    msg.Data = [.1, .1];
-    send(pub, msg);
-    pause(.25);
+    %msg.Data = [.1, .1];
+    %send(pub, msg);
+    pause(1);
     msg.Data = [0, 0];
     send(pub,msg);
     pause(.1);
