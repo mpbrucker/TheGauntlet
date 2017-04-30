@@ -2,8 +2,8 @@ function [ x, y, inliers, outliers ] = findCurveBucket( points )
     plot(points(:,1), points(:,2), 'bo');
     hold on;
 
-    distanceThreshhold = 0.05; %m - the distance to start a new point chunk
-    badnessThreshhold = 1;
+    distanceThreshhold = 0.06; %m - the distance to start a new point chunk
+    badnessThreshhold = 10;
     pointThreshhold = 4; %min point count
     
     end1 = NaN;
@@ -56,7 +56,7 @@ function [ x, y, inliers, outliers ] = findCurveBucket( points )
     else
         inliers = points(bestPointSet(1):bestPointSet(2),:);
         outliers = setdiff(points, inliers, 'rows');
-        plot(inliers(:,1), inliers(:,2), 'g*');     
+        plot(inliers(:,1), inliers(:,2), 'r*');     
     end
     x = bestX; % Assign bestX and bestY to current best X and y values
     y = bestY;
