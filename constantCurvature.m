@@ -38,7 +38,7 @@ function [ badness ] = constantCurvature( points )
     end
     
     %thisRadius = (totalLen / length(points)) / ( 2*mean(arrayfun(@(th) cos(th*2), angles)) )
-    [~, ~, thisRadius, variance] = fitCircleLinear(points(:,1), points(:,2))
+    [~, ~, thisRadius, variance] = fitCircleLinear(points(:,1), points(:,2));
     
     angleVar = var(angles, 1) * mean(angles .^2);
     

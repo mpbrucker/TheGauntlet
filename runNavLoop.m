@@ -8,6 +8,10 @@ msg = rosmessage(pub);                      %The message which will be sent to t
 omega = .4; % Angular velocity
 d = 0.254; % Length of the wheel base
 
+
+lastX = NaN;
+lastY = NaN;
+
 while true
     rMaxThreshhold = 5;
     
@@ -25,7 +29,11 @@ while true
     %scatter(points(:,1), points(:,2), '.');
     
     %gradient = getGradient(points, 0, 0);
-    gradient = noRANSAC(points);
+    [gradient, bucketX, bucketY] = noRANSAC(points, lastX, lastY);
+    if (~isnan(bucketX))
+        lastX = bucketX;
+        lastY = bucketY;
+    end
 
     [Vl, Vr] = gradientToWheels(gradient);
 

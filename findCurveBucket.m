@@ -3,7 +3,7 @@ function [ x, y, inliers, outliers ] = findCurveBucket( points )
     hold on;
 
     distanceThreshhold = 0.06; %m - the distance to start a new point chunk
-    badnessThreshhold = 10;
+    badnessThreshhold = 0.5;
     pointThreshhold = 4; %min point count
     
     end1 = NaN;

@@ -1,4 +1,4 @@
-function [ gradient ] = noRANSAC( points )
+function [ gradient, circX, circY ] = noRANSAC( points, lastX, lastY )
 
     pointConstWeight = 0.0; 
     pointDistWeight = 0; %Meters per weight I think? 
@@ -18,6 +18,15 @@ function [ gradient ] = noRANSAC( points )
         unit = [circX circY]/dist;
         force = unit * (circleConstWeight + circleDistWeight/dist);
         gradient = gradient + force;
+    else
+        if (~isnan(lastX))
+            %If no bucket was found, use the previous values
+        
+            dist = norm([lastX lastY]);
+            unit = [lastX lastY]/dist;
+            force = unit * (circleConstWeight + circleDistWeight/dist);
+            gradient = gradient + force;
+        end
     end
     
     for i = 1 : length(points)
