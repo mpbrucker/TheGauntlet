@@ -2,7 +2,7 @@ function [ x, y, inliers, outliers ] = findCurveBucket( points )
     plot(points(:,1), points(:,2), 'bo');
     hold on;
 
-    distanceThreshhold = 0.15; %m - the distance to start a new point chunk
+    distanceThreshhold = 0.2; %m - the distance to start a new point chunk
     badnessThreshhold = 3; % Minimum badness
     pointThreshhold = 4; %min point count
     

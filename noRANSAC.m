@@ -1,10 +1,10 @@
 function [ gradient, circX, circY ] = noRANSAC( points, lastX, lastY )
     clf;
     pointConstWeight = 0; 
-    pointDistWeight = 0.1; %Meters per weight I think? 
-    pointExp = 4;
+    pointDistWeight = 0.05; %Meters per weight I think? 
+    pointExp = 2;
     circleConstWeight = 10;
-    circleDistWeight = 0;
+    circleDistWeight = 10;
     
     
     gradient = [0 0];

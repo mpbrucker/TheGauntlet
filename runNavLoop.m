@@ -10,11 +10,13 @@ omega = .4; % Angular velocity
 d = 0.254; % Length of the wheel base
 lidarOffset = 0.1; %m - distance between center of LIDAR and center of bot
 
-bucketMaxAge = 4; %Number of iterations to keep the last-seen bucket in memory
+bucketMaxAge = 2; %Number of iterations to keep the last-seen bucket in memory
 bucketAge = bucketMaxAge+1; %So it's not used at first
 
-lastX = NaN;
-lastY = NaN;
+% pastBuckets = []; %Stores the locations of past bucket sightings
+
+bucketX = NaN;
+bucketY = NaN;
     
 odom_message = receive(sub_odom);
 last_pos = [odom_message.Pose.Pose.Position.X, odom_message.Pose.Pose.Position.Y];
@@ -88,7 +90,7 @@ while true
      send(pub, msg);
     
     b = receive(sub_nump);
-    if any(b.Data(2:4))
+    if any(b.Data)
         break;
     end
     

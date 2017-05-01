@@ -1,6 +1,6 @@
 function [ badness ] = constantCurvature( points )
 
-    disp("Testing set of points...");
+    disp('Testing set of points...');
 
     if length(points) < 3
         badness = NaN;
