@@ -28,7 +28,18 @@ while true
     
     clf;
 
-    odom_message = receive(sub_odom);
+    odom_message = receive(sub_odom);   %Yes, we receive position twice per
+                                        %loop.  It's not ideal, but given 
+                                        %that the slow call 
+                                        %(noRANSAC) is one command I think
+                                        %it's the best we can do.  Ideally
+                                        %it shouldn't have a huge impact
+                                        %because the bucket should be
+                                        %sighted often.  Please check to be
+                                        %sure the measuring and math happen
+                                        %at the right places -- we don't
+                                        %want to use position data from a
+                                        %previous iteration on accident.
     this_pos = [odom_message.Pose.Pose.Position.X, odom_message.Pose.Pose.Position.Y];
     this_dir = odom_message.Pose.Pose.Orientation.W;
     
