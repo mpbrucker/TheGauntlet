@@ -7,7 +7,7 @@ function [ badness ] = constantCurvature( points )
     end
 
     targetRadius = 0.11; % m
-    radiusWeight = 200; 
+    radiusWeight = 20; 
     varianceWeight = 0; 
     angleWeight = 1;
     smoothWeight = 100;
