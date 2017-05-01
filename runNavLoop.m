@@ -1,8 +1,9 @@
 tf = rostf;
 % wait for a bit so we can build up a few tf frames
 pause(2);
-subPoints = rossubscriber('/stable_scan'); %Point-cloud subscriber
-sub_bump = rossubscriber('/bump');          %Bump sensor to stop script
+sub_points = rossubscriber('/stable_scan'); %Point-cloud subscriber
+sub_nump = rossubscriber('/bump');          %Bump sensor to stop script
+sub_odom = rossubscriber('/odom');
 pub = rospublisher('/raw_vel');             %Velocity publisher to move wheels
 msg = rosmessage(pub);                      %The message which will be sent to the wheels
 omega = .4; % Angular velocity
@@ -16,7 +17,7 @@ while true
     rMaxThreshhold = 5;
     
 
-    scan_message = receive(subPoints);
+    scan_message = receive(sub_points);
     r = scan_message.Ranges(1:end-1);
     theta = [0:359]';
     
@@ -26,27 +27,30 @@ while true
     points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)]; % Points represented in Cartesian coordinates
     
     clf;
-    %scatter(points(:,1), points(:,2), '.');
+
+    odom_message = receive(sub_odom);
+    this_pos = [odom_message.Pose.Pose.Position.X, odom_message.Pose.Pose.Position.Y];
+    this_dir = odom_message.Pose.Pose.Orientation.W;
     
-    %gradient = getGradient(points, 0, 0);
-    [gradient, bucketX, bucketY] = noRANSAC(points, lastX, lastY);
-    if (~isnan(bucketX))
+    if (~isnan(bucketX)) %Position adjustment should happen here
         lastX = bucketX;
         lastY = bucketY;
     end
+    
+    
+    [gradient, bucketX, bucketY] = noRANSAC(points, lastX, lastY);
+    
+    odom_message = receive(sub_odom);
+    last_pos = [odom_message.Pose.Pose.Position.X, odom_message.Pose.Pose.Position.Y];
+    last_dir = odom_message.Pose.Pose.Orientation.W;
 
     [Vl, Vr] = gradientToWheels(gradient);
 
     %sending the wheel velocities to the NEATO
     msg.Data = [double(Vl), double(Vr)];
     send(pub, msg);
-
-    %pause(1);
-    %msg.Data = [0, 0];
-    %send(pub,msg);
-    %pause(.1);
     
-    b = receive(sub_bump);
+    b = receive(sub_nump);
     if any(b.Data(2:4))
         break;
     end
