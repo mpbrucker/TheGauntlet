@@ -3,7 +3,7 @@ function [ x, y, inliers, outliers ] = findCurveBucket( points )
     hold on;
 
     distanceThreshhold = 0.15; %m - the distance to start a new point chunk
-    badnessThreshhold = 5; % Minimum badness
+    badnessThreshhold = 3; % Minimum badness
     pointThreshhold = 4; %min point count
     
     end1 = NaN;
@@ -52,7 +52,7 @@ function [ x, y, inliers, outliers ] = findCurveBucket( points )
             
     
     if (bestBadness == badnessThreshhold) % No bucket has been found
-        display('No bucket found!')
+        disp('No bucket found!');
         inliers = [];
         outliers = points;
     else

@@ -8,7 +8,10 @@ pub = rospublisher('/raw_vel');             %Velocity publisher to move wheels
 msg = rosmessage(pub);                      %The message which will be sent to the wheels
 omega = .4; % Angular velocity
 d = 0.254; % Length of the wheel base
+lidarOffset = 0.1; %m - distance between center of LIDAR and center of bot
 
+bucketMaxAge = 4; %Number of iterations to keep the last-seen bucket in memory
+bucketAge = bucketMaxAge+1; %So it's not used at first
 
 lastX = NaN;
 lastY = NaN;
@@ -28,8 +31,7 @@ while true
     r_keep = (r~=0) & (r<=rMaxThreshhold);
     r_clean = r(r_keep);
     theta_clean = deg2rad(theta(r_keep));
-    points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)]; % Points represented in Cartesian coordinates
-    
+    points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean) - lidarOffset]; % Points represented in Cartesian coordinates
 
     odom_message = receive(sub_odom);   %Yes, we receive position twice per
                                         %loop.  It's not ideal, but given 
@@ -46,7 +48,7 @@ while true
     new_pos = [odom_message.Pose.Pose.Position.X, odom_message.Pose.Pose.Position.Y];
     new_dir = odom_message.Pose.Pose.Orientation.W;
     
-    if (~isnan(bucketX)) %Position adjustment should happen here
+    if ~isnan(bucketX) && bucketAge <= bucketMaxAge %Position adjustment should happen here
 
         bucketPos = [bucketX; bucketY; 1];
         trans1 = [1 0 -last_pos(1); 0 1 -last_pos(2); 0 0 1];
@@ -59,11 +61,20 @@ while true
         
         lastX = bucketPos(1);
         lastY = bucketPos(2);
-           
+        
     end
     
     
-    [gradient, bucketX, bucketY] = noRANSAC(points, lastX, lastY);
+    [gradient, thisX, thisY] = noRANSAC(points, lastX, lastY);
+    if (~isnan(thisX))
+        bucketX = thisX;
+        bucketY = thisY;
+        bucketAge = 0;
+    else
+        bucketX = lastX;
+        bucketY = lastY;
+        bucketAge = bucketAge + 1;
+    end
     quiver(0, 0, gradient(1), gradient(2), 'r');
     
     odom_message = receive(sub_odom);
