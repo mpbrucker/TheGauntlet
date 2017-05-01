@@ -12,6 +12,10 @@ d = 0.254; % Length of the wheel base
 
 lastX = NaN;
 lastY = NaN;
+    
+odom_message = receive(sub_odom);
+last_pos = [odom_message.Pose.Pose.Position.X, odom_message.Pose.Pose.Position.Y];
+last_dir = odom_message.Pose.Pose.Orientation.W;
 
 while true
     rMaxThreshhold = 5;
@@ -40,12 +44,23 @@ while true
                                         %at the right places -- we don't
                                         %want to use position data from a
                                         %previous iteration on accident.
-    this_pos = [odom_message.Pose.Pose.Position.X, odom_message.Pose.Pose.Position.Y];
-    this_dir = odom_message.Pose.Pose.Orientation.W;
+    new_pos = [odom_message.Pose.Pose.Position.X, odom_message.Pose.Pose.Position.Y];
+    new_dir = odom_message.Pose.Pose.Orientation.W;
     
     if (~isnan(bucketX)) %Position adjustment should happen here
-        lastX = bucketX;
-        lastY = bucketY;
+
+        bucketPos = [bucketX; bucketY; 1];
+        trans1 = [1 0 -last_pos(1); 0 1 -last_pos(2); 0 0 1];
+        rot1 = [cos(last_dir) sin(last_dir) 0; -sin(last_dir) cos(last_dir) 0; 0 0 1];
+        bucketPos = rot1 * (trans1 * bucketPos);
+        
+        rot2 = [cos(new_dir) -sin(new_dir) 0; sin(new_dir) cos(new_dir) 0; 0 0 1];
+        trans2 = [1 0 new_pos(1); 0 1 new_pos(2); 0 0 1];
+        bucketPos = trans2 * (rot2 * bucketPos);
+        
+        lastX = bucketPos(1);
+        lastY = bucketPos(2);
+           
     end
     
     
