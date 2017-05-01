@@ -30,7 +30,6 @@ while true
     theta_clean = deg2rad(theta(r_keep));
     points = [r_clean.*cos(theta_clean) r_clean.*sin(theta_clean)]; % Points represented in Cartesian coordinates
     
-    clf;
 
     odom_message = receive(sub_odom);   %Yes, we receive position twice per
                                         %loop.  It's not ideal, but given 
@@ -65,6 +64,7 @@ while true
     
     
     [gradient, bucketX, bucketY] = noRANSAC(points, lastX, lastY);
+    quiver(0, 0, gradient(1), gradient(2), 'r');
     
     odom_message = receive(sub_odom);
     last_pos = [odom_message.Pose.Pose.Position.X, odom_message.Pose.Pose.Position.Y];
@@ -74,7 +74,7 @@ while true
 
     %sending the wheel velocities to the NEATO
     msg.Data = [double(Vl), double(Vr)];
-    send(pub, msg);
+     send(pub, msg);
     
     b = receive(sub_nump);
     if any(b.Data(2:4))

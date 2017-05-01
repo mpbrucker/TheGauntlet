@@ -15,7 +15,7 @@ xc = -w(1)/2;
 yc = -w(2)/2;
 r = sqrt(xc.^2 + yc.^2 - w(3));
 
-radii = sqrt(x.^2 + y.^2);
+radii = sqrt((x - xc).^2 + (y - yc).^2);
 variance = mean((radii - r).^2);
 
 end

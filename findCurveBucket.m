@@ -2,8 +2,8 @@ function [ x, y, inliers, outliers ] = findCurveBucket( points )
     plot(points(:,1), points(:,2), 'bo');
     hold on;
 
-    distanceThreshhold = 0.06; %m - the distance to start a new point chunk
-    badnessThreshhold = 0.5;
+    distanceThreshhold = 0.15; %m - the distance to start a new point chunk
+    badnessThreshhold = 5; % Minimum badness
     pointThreshhold = 4; %min point count
     
     end1 = NaN;
@@ -11,6 +11,7 @@ function [ x, y, inliers, outliers ] = findCurveBucket( points )
     bestBadness = badnessThreshhold;
     bestX = NaN;
     bestY = NaN;
+    bestR = NaN;
     bestPointSet = [];
     
     [theta,~] = cart2pol(points(:,1),points(:,2));
@@ -32,10 +33,11 @@ function [ x, y, inliers, outliers ] = findCurveBucket( points )
 
         if (norm(points(index,:) - points(prev,:)) > distanceThreshhold) || index == length(points)
             thisBadness = constantCurvature(points(end1:prev,:));
-            [thisX, thisY, ~, ~] = fitCircleLinear(points(end1:prev,1), points(end1:prev,2));
+            [thisX, thisY, thisR, ~] = fitCircleLinear(points(end1:prev,1), points(end1:prev,2));
             if ~isnan(thisBadness) && (thisBadness < bestBadness) && (prev-end1) >= pointThreshhold
                 bestX = thisX;
                 bestY = thisY;
+                bestR = thisR;
                 bestBadness = thisBadness;
                 bestPointSet = [end1, prev];
             end
@@ -60,6 +62,7 @@ function [ x, y, inliers, outliers ] = findCurveBucket( points )
     end
     x = bestX; % Assign bestX and bestY to current best X and y values
     y = bestY;
+    display(bestR);
 
 end
 

@@ -1,5 +1,6 @@
 function [ badness ] = constantCurvature( points )
 
+    disp("Testing set of points...");
 
     if length(points) < 3
         badness = NaN;
@@ -7,11 +8,12 @@ function [ badness ] = constantCurvature( points )
     end
 
     targetRadius = 0.11; % m
-    radiusWeight = 20; 
-    varianceWeight = 0; 
-    angleWeight = 1;
-    smoothWeight = 100;
+    radiusWeight = 10; 
+    varianceWeight = 50000; 
+    angleWeight = 1*0;
+    smoothWeight = 10*0;
     countWeight = -0.5;
+    radCutoff = 0.04; % m
 
     angles = zeros(length(points)-2, 1);
     da = zeros(length(points)-3, 1);
@@ -39,6 +41,10 @@ function [ badness ] = constantCurvature( points )
     
     %thisRadius = (totalLen / length(points)) / ( 2*mean(arrayfun(@(th) cos(th*2), angles)) )
     [~, ~, thisRadius, variance] = fitCircleLinear(points(:,1), points(:,2));
+    if abs(thisRadius-targetRadius) > radCutoff
+        badness = NaN;
+        return;
+    end
     
     angleVar = var(angles, 1) * mean(angles .^2);
     
